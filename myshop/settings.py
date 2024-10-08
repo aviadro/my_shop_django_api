@@ -31,6 +31,13 @@ ALLOWED_HOSTS = ["*"]
 
 CSRF_COOKIE_SECURE = True
 
+ALLOWED_HOSTS = ['https://my-shop-django-api-1-vssq.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://my-shop-django-api-1-vssq.onrender.com']
+CORS_ALLOWED_ORIGINS = [
+    'https://my-shop-django-api-1-vssq.onrender.com',
+]
+
+
 # Application definition
 
 INSTALLED_APPS = [
