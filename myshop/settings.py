@@ -27,11 +27,10 @@ SECRET_KEY = 'django-insecure-v*e5rqnvdh++&xh@-oy^*bz!2=k+3s^*#aa9f^qm$f&tu$g@^7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['https://my-shop-django-api-1-vssq.onrender.com']
 
 CSRF_COOKIE_SECURE = True
 
-ALLOWED_HOSTS = ['https://my-shop-django-api-1-vssq.onrender.com']
 CSRF_TRUSTED_ORIGINS = ['https://my-shop-django-api-1-vssq.onrender.com']
 CORS_ALLOWED_ORIGINS = [
     'https://my-shop-django-api-1-vssq.onrender.com',
