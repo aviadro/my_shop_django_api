@@ -1,9 +1,10 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from products.models import Category, Product
+from products.models import Category, Product, Cart
 from products.serializers import CategorySerializer, ProductSerializer
 from rest_framework.generics import get_object_or_404
+from rest_framework import status
 
 @api_view(['GET'])
 def category_list(request):
@@ -59,3 +60,24 @@ def product_detail(request, id):
     elif request.method == 'DELETE':
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+def get_cart_products(request):
+    # Get the cart for the authenticated user
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_products = []
+    
+    # Loop through all items in the cart
+    for cart_item in cart.items.all():
+        product = cart_item.product  # Get the product from the CartItem
+        quantity = cart_item.quantity  # Get the quantity from the CartItem
+
+        # Serialize the product data
+        product_data = ProductSerializer(product).data
+        product_data['quantity'] = quantity
+        product_data['total_price'] = product.price * quantity
+        
+        # Add the product data to the cart products list
+        cart_products.append(product_data)
+
+    # Return the cart products in the response
+    return Response(cart_products, status=status.HTTP_200_OK)

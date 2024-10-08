@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            padding: 20px;
+        }
+        .product-image {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Your Cart</h1>
+        <div id="cart-items" class="list-group">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <h3 id="cart-total" class="mt-4"></h3>
+    </div>
+
+    <script>
+        const HOST = 'http://127.0.0.1:8000';  // Replace with your actual backend host
+
+        // Function to fetch and display cart items
+        async function fetchCart() {
+            try {
+                const response = await axios.get(`${HOST}/products/cart/`);  // Replace with your cart endpoint
+                const cartItems = response.data;
+                let total = 0;
+
+                const cartItemsDiv = document.getElementById('cart-items');
+                cartItemsDiv.innerHTML = '';  // Clear existing items
+
+                cartItems.forEach(cartItem => {
+                    const product = cartItem.product; // Get the product details from the cart item
+                    const quantity = cartItem.quantity;
+                    const totalPrice = product.price * quantity;
+                    total += totalPrice;
+
+                    // Create cart item HTML
+                    const productItem = document.createElement('div');
+                    productItem.className = 'list-group-item';
+                    productItem.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${product.name}</strong> - ₪${product.price.toFixed(2)}
+                                <br> Quantity: ${quantity} 
+                                <br> Total: ₪${totalPrice.toFixed(2)}
+                            </div>
+                            <img src="${HOST}${product.image}" alt="${product.name}" class="product-image">
+                        </div>
+                    `;
+                    cartItemsDiv.appendChild(productItem);
+                });
+
+                // Update total price in cart
+                document.getElementById('cart-total').innerText = `Total: ₪${total.toFixed(2)}`;
+            } catch (error) {
+                console.error('Error fetching cart:', error);
+                document.getElementById('cart-items').innerHTML = '<div class="alert alert-danger">Failed to load cart items.</div>';
+            }
+        }
+
+        // Fetch cart products when the page loads
+        window.onload = fetchCart;
+    </script>
+</body>
+</html>
